@@ -7,30 +7,14 @@
   <meta name="theme-color" content="#134f2d" />
   <title>BowlsDirector — Lawn Bowls</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='31' fill='%23c8973a'/><circle cx='32' cy='32' r='27' fill='%231a6b3c'/><text x='32' y='43' text-anchor='middle' font-family='Arial Black,Arial,sans-serif' font-weight='900' font-size='26' letter-spacing='-1' fill='%23ffffff'>BD</text></svg>" />
-
-  <!-- React 18 & ReactDOM — loaded from CDN, no build step needed -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     html, body, #root { margin: 0; padding: 0; min-height: 100vh; }
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: #f7f9f7;
-      -webkit-font-smoothing: antialiased;
-    }
-    #loading {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      background: #134f2d;
-      color: #fff;
-      gap: 16px;
-    }
-    #loading p     { font-size: 20px; font-weight: 700; margin: 0; letter-spacing: .3px; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f7f9f7; -webkit-font-smoothing: antialiased; }
+    #loading { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #134f2d; color: #fff; gap: 16px; }
+    #loading p { font-size: 20px; font-weight: 700; margin: 0; }
     #loading small { font-size: 13px; opacity: .5; margin-top: -8px; }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -42,35 +26,29 @@
   </style>
 </head>
 <body>
-
   <div id="loading">
     <svg width="80" height="80" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="32" cy="32" r="31" fill="#c8973a"/>
       <circle cx="32" cy="32" r="27" fill="#1a6b3c"/>
       <circle cx="32" cy="32" r="27" fill="none" stroke="#134f2d" stroke-width="2"/>
-      <text x="32" y="43" text-anchor="middle"
-            font-family="Arial Black, Arial, sans-serif"
-            font-weight="900" font-size="26" letter-spacing="-1"
-            fill="#ffffff">BD</text>
+      <text x="32" y="43" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="26" letter-spacing="-1" fill="#ffffff">BD</text>
     </svg>
     <p>BowlsDirector</p>
     <small>Lawn Bowls Club Management</small>
   </div>
-
   <div id="root"></div>
 
-  <!-- Pre-compiled app — no Babel transpilation needed at runtime -->
   <script>
-    // React hooks — destructured from the global React object (loaded via CDN above)
+    // ── Everything in ONE script block so all variables are in the same scope ──
+
+    // Destructure React hooks into global scope
     const { useState, useEffect, useCallback, useRef } = React;
 
-    // Storage shim — maps app's window.storage calls to localStorage
+    // Storage shim — persists data via localStorage
     window.storage = {
       get: async (key) => {
-        try {
-          const val = localStorage.getItem('bd_' + key);
-          return val ? { key, value: val } : null;
-        } catch(e) { return null; }
+        try { const v = localStorage.getItem('bd_' + key); return v ? { key, value: v } : null; }
+        catch(e) { return null; }
       },
       set: async (key, value) => {
         try { localStorage.setItem('bd_' + key, value); return { key, value }; }
@@ -83,16 +61,14 @@
       list: async (prefix) => {
         try {
           const keys = Object.keys(localStorage)
-            .filter(k => k.startsWith('bd_' + (prefix||'')))
-            .map(k => k.replace('bd_',''));
+            .filter(k => k.startsWith('bd_' + (prefix || '')))
+            .map(k => k.replace('bd_', ''));
           return { keys };
         } catch(e) { return { keys: [] }; }
       }
     };
-  </script>
 
-  <!-- BowlsDirector — pre-compiled from JSX to plain JavaScript -->
-  <script>
+    // ── BowlsDirector app (pre-compiled from JSX) ──
 const C = {
   green: "#1a6b3c",
   greenDk: "#134f2d",
@@ -2560,12 +2536,11 @@ function App() {
 }
 
 
-    // Mount the React app
+    // ── Mount ──
     ReactDOM.createRoot(document.getElementById('root')).render(
       React.createElement(App)
     );
     document.getElementById('loading').style.display = 'none';
   </script>
-
 </body>
 </html>
